@@ -17,11 +17,12 @@ function getModuleDir() {
 }
 
 
-async function iterDuct({ pipelineName, configPath }) {
-  configPath = configPath || getModuleDir()
+async function iterDuct({ pipelineName, modulePath }) {
+  modulePath = modulePath || getModuleDir()
+  const configPath = path.join(modulePath, 'config')
   const cfg = await loadConfig(configPath)
   const pipelineConfig = getPipeLineConfig(cfg, pipelineName)
-  const segmentInstances = createSegmentInstances(pipelineConfig, configPath)
+  const segmentInstances = createSegmentInstances(pipelineConfig, modulePath)
   const iter = it.compose(segmentInstances.reverse());
   return iter
 }
