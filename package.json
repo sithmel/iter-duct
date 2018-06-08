@@ -2,7 +2,10 @@
   "name": "iter-duct",
   "version": "0.0.0",
   "description": "",
-  "main": "index",
+  "main": "src/index",
+  "bin": {
+    "iter-duct": "./bin/iter-duct.js"
+  },
   "scripts": {
     "lint": "eslint --fix --ext .js ./src ./test",
     "test": "mocha",
@@ -23,7 +26,10 @@
   "license": "MIT",
   "dependencies": {
     "conflab": "^1.0.14",
+    "handlebars": "^4.0.11",
     "iter-tools": "^4.0.2",
+    "lodash": "^4.17.10",
+    "minimist": "^1.2.0",
     "obj-template": "^2.1.2"
   },
   "devDependencies": {

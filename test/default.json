@@ -1,0 +1,8 @@
+{
+  "test": "hello",
+  "test2": "{{test}} world!",
+  "pipeline": [
+    { "require": "./test-module1" },
+    { "require": "./test-module2" }
+  ]
+}
