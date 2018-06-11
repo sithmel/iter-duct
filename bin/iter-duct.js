@@ -7,9 +7,11 @@ async function consumeIterable(iterable) {
   for await (const i of iterable()) {}
 }
 
-const pipelineName = argv.p || 'pipeline'
+const pipelineName = argv.pipeline || 'pipeline'
+const configFile = argv.config || 'iter-duct.config.js'
+const conflab = !!argv.useConflab
 
-iterDuct({ pipelineName })
+iterDuct({ pipelineName, configFile, conflab })
   .then((iterable) => {
     return consumeIterable(iterable)
   })
