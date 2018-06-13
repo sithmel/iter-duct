@@ -1,11 +1,8 @@
 const path = require('path')
 const fs = require('fs')
-const it = require('iter-tools')
-const loadConfig = require('./load-config')
-const getPipeLineConfig = require('./get-pipeline-config')
-const createSegmentInstances = require('./create-segment-instances')
+const it = require('iter-tools/es2018')
 
-function getModuleDir() {
+function getModuleDir () {
   const pathFrags = process.cwd().split(path.sep)
   while (pathFrags.length) {
     const dirpath = path.sep + path.join(...pathFrags)
@@ -16,22 +13,13 @@ function getModuleDir() {
   }
 }
 
-async function getConflabConfig(modulePath, pipelineName) {
-  const configPath = path.join(modulePath, 'config')
-  const cfg = await loadConfig(configPath)
-  const pipelineConfig = getPipeLineConfig(cfg, pipelineName)
-  return createSegmentInstances(pipelineConfig, modulePath)
-}
-
-async function iterDuct({ pipelineName, modulePath, configFile, conflab }) {
+function iterDuct ({ pipelineName, modulePath, configFile }) {
   modulePath = modulePath || getModuleDir()
-  let segmentInstances
-  if (conflab) {
-    segmentInstances = await getConflabConfig(modulePath, pipelineName)
-  } else {
-    segmentInstances = require(path.join(modulePath, configFile))
-  }
-  const iter = it.compose(segmentInstances.reverse());
+  pipelineName = pipelineName || 'pipeline'
+  configFile = configFile || 'iter-duct.config.js'
+  const config = require(path.join(modulePath, configFile))
+  const pipeline = Array.isArray(config) ? config : config[pipelineName]
+  const iter = it.compose(pipeline.reverse())
   return iter
 }
 

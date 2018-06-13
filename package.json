@@ -10,7 +10,6 @@
     "lint": "eslint --fix --ext .js ./src ./test",
     "test": "mocha",
     "watch": "npm run test -- -w",
-    "prepublish": "npm run build",
     "precommit": "npm run lint",
     "prepush": "npm run test"
   },
@@ -25,14 +24,12 @@
   "author": "Maurizio Lupo <maurizio.lupo@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "conflab": "^1.0.14",
-    "handlebars": "^4.0.11",
-    "iter-tools": "^4.0.2",
+    "iter-tools": "^4.1.1",
     "lodash": "^4.17.10",
-    "minimist": "^1.2.0",
-    "obj-template": "^2.1.2"
+    "minimist": "^1.2.0"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.3",
     "chai": "^4.1.2",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
