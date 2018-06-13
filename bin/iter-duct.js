@@ -9,7 +9,7 @@ const configFile = argv.config || 'iter-duct.config.js'
 
 const iterable = iterDuct({ pipelineName, configFile })
 
-const x = it.asyncConsume(() => {}, iterable)
+it.asyncConsume(() => {}, iterable)
   .catch(err => {
     console.error(err)
     process.exit(1)
