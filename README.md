@@ -30,12 +30,12 @@ npm install --save iter-duct
 ```
 You can configure your pipeline using a plain javascript file called "iter-duct.conf.js" in the root of your package. You can expose the configuration as array:
 ```js
-const readCSV = require('iter-duct/readCSV')
-const writeJSON = require('iter-duct/writeJSON')
+const readCSV = require('iter-duct-utils/readCSV')
+const writeJSON = require('iter-duct-utils/writeJSON')
 
 module.exports = [
   readCSV({ filename: 'data.csv' }),
-  writeJSON({ filename: '$n.json' }),
+  writeJSON({ filename: (data) => `${data.id}.json` }),
 ]
 ...
 ```
@@ -51,7 +51,7 @@ const writeJSON = require('iter-duct/writeJSON')
 module.exports = {  
   migration1: [
     readCSV({ filename: 'data.csv' }),
-    writeJSON({ filename: '$n.json' }),
+    writeJSON({ filename: (data) => `${data.id}.json` }),
   ]
 }
 ...
