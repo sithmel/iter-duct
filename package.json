@@ -24,7 +24,7 @@
   "author": "Maurizio Lupo <maurizio.lupo@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "iter-tools": "^4.1.1",
+    "iter-tools": "^5.0.0",
     "lodash": "^4.17.10",
     "minimist": "^1.2.0"
   },
