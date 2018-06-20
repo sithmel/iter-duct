@@ -96,3 +96,14 @@ This segment is just a pass-through, but you can:
 An important caveat is that you **always** yield something as output, even if your segment is intended to be the last segment of the pipe.
 
 You can find examples and some useful pipeline segments in iter-duct-utils
+
+Javascript API
+--------------
+iter-duct exposes a js api too!
+```js
+const IterDuct = require('iter-duct')
+const id = new IterDuct(pipeline) // pipeline is aan array of segments as defined in the configuration
+id.run() // it runs a pipeline, returns a promise
+id.toArray() // it runs the pipeline and returns an array with all items (useful for debugging)
+id.iter() // returns the iterator
+```
