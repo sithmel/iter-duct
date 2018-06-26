@@ -74,6 +74,19 @@ The default name for a pipeline is "pipeline" but you can use different names:
 ```
 npx iter-duct -pipeline migration-pipeline
 ```
+The pipeline can also be a sync or async function that returns the array. The argument of this function are the command line arguments used to launch iter-duct:
+```js
+module.exports = async function (dbPassword) {
+  const db = await connectToDb(dbPassword)
+  return [
+    // ... the pipeline
+  ]
+}
+```
+that you can run with:
+```
+npx iter-duct -dbPassword secretpassword
+```
 
 Writing a pipeline segments
 ---------------------------
@@ -105,5 +118,6 @@ const IterDuct = require('iter-duct')
 const id = new IterDuct(pipeline) // pipeline is aan array of segments as defined in the configuration
 id.run() // it runs a pipeline, returns a promise
 id.toArray() // it runs the pipeline and returns an array with all items (useful for debugging)
-id.iter() // returns the iterator
+id.iter // contains the composed iterator
 ```
+Once an iterator is consumed by **run** or **toArray** it can't be used anymore.

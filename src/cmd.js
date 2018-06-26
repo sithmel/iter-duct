@@ -13,13 +13,16 @@ function getModuleDir () {
   }
 }
 
-function iterDuct ({ pipelineName, modulePath, configFile }) {
+function iterDuct ({ pipelineName, modulePath, configFile, argv }) {
   modulePath = modulePath || getModuleDir()
   pipelineName = pipelineName || 'pipeline'
   configFile = configFile || 'iter-duct.config.js'
   const config = require(path.join(modulePath, configFile))
   const pipeline = Array.isArray(config) ? config : config[pipelineName]
-  return new IterDuct(pipeline)
+  const pipelineFunc = typeof pipeline === 'function' ? pipeline : () => pipeline
+  return Promise.resolve()
+    .then(() => pipelineFunc(argv))
+    .then((p) => new IterDuct(pipeline))
 }
 
 module.exports = iterDuct
