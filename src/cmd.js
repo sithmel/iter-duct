@@ -18,11 +18,12 @@ function iterDuct ({ pipelineName, modulePath, configFile, argv }) {
   pipelineName = pipelineName || 'pipeline'
   configFile = configFile || 'iter-duct.config.js'
   const config = require(path.join(modulePath, configFile))
-  const pipeline = Array.isArray(config) ? config : config[pipelineName]
+  const pipeline = Array.isArray(config) || typeof config === 'function' ? config : config[pipelineName]
   const pipelineFunc = typeof pipeline === 'function' ? pipeline : () => pipeline
+
   return Promise.resolve()
     .then(() => pipelineFunc(argv))
-    .then((p) => new IterDuct(pipeline))
+    .then((p) => new IterDuct(p))
 }
 
 module.exports = iterDuct
