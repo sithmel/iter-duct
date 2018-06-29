@@ -62,7 +62,7 @@ npx iter-duct -pipeline migration1
 ```
 You can also use a different config file:
 ```
-npx iter-duct -config special.js
+npx iter-duct --config special.js
 ```
 or you define a script in your package.json:
 ```
@@ -72,7 +72,7 @@ or you define a script in your package.json:
 ```
 The default name for a pipeline is "pipeline" but you can use different names:
 ```
-npx iter-duct -pipeline migration-pipeline
+npx iter-duct --pipeline migration-pipeline
 ```
 The pipeline can also be a sync or async function that returns the array. The argument of this function are the command line arguments used to launch iter-duct:
 ```js
