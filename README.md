@@ -76,7 +76,7 @@ npx iter-duct -pipeline migration-pipeline
 ```
 The pipeline can also be a sync or async function that returns the array. The argument of this function are the command line arguments used to launch iter-duct:
 ```js
-module.exports = async function (dbPassword) {
+module.exports = async function ({ dbPassword }) {
   const db = await connectToDb(dbPassword)
   return [
     // ... the pipeline
