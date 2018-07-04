@@ -1,8 +1,13 @@
 const it = require('iter-tools/es2018')
+const {
+  multiplex,
+  getSegment,
+  passthrough
+} = require('./segments')
 
 class IterDuct {
   constructor (pipeline) {
-    this.iter = it.compose(pipeline.reverse())
+    this.iter = getSegment(pipeline)
   }
 
   run () {
@@ -14,4 +19,9 @@ class IterDuct {
   }
 }
 
-module.exports = IterDuct
+module.exports = {
+  IterDuct,
+  multiplex,
+  getSegment,
+  passthrough
+}

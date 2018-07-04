@@ -1,6 +1,6 @@
 const path = require('path')
 const fs = require('fs')
-const IterDuct = require('./index')
+const { IterDuct } = require('./index')
 
 function getModuleDir () {
   const pathFrags = process.cwd().split(path.sep)
