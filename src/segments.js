@@ -17,7 +17,7 @@ function passthrough () {
 
 /* getSegment */
 
-function getSegment(segment) {
+function getSegment (segment) {
   if (segment === null || segment === '.') {
     return passthrough()
   } else if (typeof segment === 'string') {
@@ -31,7 +31,7 @@ function getSegment(segment) {
   }
 }
 
-function combine(segments) {
+function combine (segments) {
   return it.compose(segments.reverse().map(getSegment))
 }
 
