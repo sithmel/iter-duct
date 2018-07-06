@@ -95,7 +95,11 @@ You can define a segment using:
 * an array of functions like above
 * a string containing '.': This is replaced by the segment passThrough (it returns the same iterable it got as input)
 * a string containing a path expression (the same used by lodash get): This maps the async iterable in input, extracting a field from it
-* an object with a segment for each value: this clones the iterable in input and run the iterable through each segment. Then it maps the result using the same keys of the object
+* an object with a segment for each value: this clones the iterable in input and run the iterable through each segment. Then it maps the result using the same keys of the object. This is called "multiplex"
+
+Multiplex is a special segment that combines different segments and zip the results together.
+You can use it to return a sequence of arrays that implements multiple segments:
+
 ```js
 const it = require('iter-tools/es2018')
 
@@ -110,8 +114,6 @@ const pipeline = [
   { square: it.asyncMap(n => n * n), double: it.asyncMap(n => n * 2) },
   logger
 ]
-
-pipeline()
 ```
 It will print this sequence:
 ```js
@@ -162,4 +164,54 @@ This library provides a special set of segments:
 * passthrough: it is a simple segment that return the iterable in input
 ```js
 const { multiplex, getSegment, passthrough } = require('iter-duct')
+```
+
+tricks
+======
+
+#### Running multiple migration segments in parallel
+Multiplex can be useful if you can run multiple migration segments at the same time:
+
+```js
+{ a: getJSON({ ... }), b: jsonWriter({ ... })}
+```
+
+#### Retain the original sequence
+or you can use passthrough to retain the original iterable:
+```js
+[
+  ...  
+  { a: getJSON({ ... }), b: '.'}
+  asyncMap(({ a, b }) => ({
+    ...a, id: b.id // I want to reuse the id from the original iterable
+  }))
+  ...
+]
+```
+
+#### Start a pipeline with an array (or iterable)
+If you want you can start your pipeline with any function that returns an iterable (synchronous or asynchronous):
+```js
+[
+  () => [1, 2, 3, 4],
+  getJSON({ url: (item) => `http://www.archive.com/item${item}`}),
+  JSONWriter({ filename: (item) => `${item.id}.json`  })
+]
+```
+
+#### How to generate random sequences
+You can combine iter-tools execute and occamsrazor-generate
+```js
+const it = require('iter-tools/es2018')
+const generate = require('occamsrazor-generate')
+const chance = require('occamsrazor-generate/extra/chance')
+
+// This returns an infinite sequence of objects. Combine with slice to set a maximum size.
+[
+  itools.execure(generate({
+    x: chance('integer', {min: -20, max: 20}),
+    y: chance('integer', {min: -20, max: 20})
+  })),
+  ...
+]
 ```

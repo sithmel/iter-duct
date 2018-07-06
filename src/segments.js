@@ -51,7 +51,8 @@ function multiplex (options) {
     const segmentInstances = it.map(
       ([segment, iterable]) => segment(iterable),
       it.zip(segments, iterables))
-    const zippedSequence = it.asyncZip(...segmentInstances)
+
+    const zippedSequence = it.asyncZipLongest(...it.chain([null], segmentInstances))
     if (keys) {
       return it.asyncMap(arr => fromPairs(it.zip(keys, arr)), zippedSequence)
     }
