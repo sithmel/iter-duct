@@ -15,10 +15,18 @@ function getModuleDir () {
 
 function iterDuct ({ pipelineName, modulePath, configFile, argv }) {
   modulePath = modulePath || getModuleDir()
-  pipelineName = pipelineName || 'pipeline'
   configFile = configFile || 'iter-duct.config.js'
   const config = require(path.join(modulePath, configFile))
-  const pipeline = Array.isArray(config) || typeof config === 'function' ? config : config[pipelineName]
+
+  if (pipelineName && !config[pipelineName]) {
+    throw new Error(`Pipeline ${pipelineName} is not defined: You can use: ${Object.keys(config).join(', ')}`)
+  }
+
+  let pipeline = pipelineName ? config[pipelineName] : config
+
+  if (!Array.isArray(pipeline) && typeof pipeline !== 'function') {
+    throw new Error(`Pipeline should be either an array or a function returning an array`)
+  }
   const pipelineFunc = typeof pipeline === 'function' ? pipeline : () => pipeline
 
   return Promise.resolve()

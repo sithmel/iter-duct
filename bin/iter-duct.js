@@ -3,10 +3,18 @@
 const iterDuct = require('../src/cmd')
 const argv = require('minimist')(process.argv.slice(2))
 
-const pipelineName = argv.pipeline || 'pipeline'
+const pipelineName = argv.pipeline
 const configFile = argv.config || 'iter-duct.config.js'
 
-iterDuct({ pipelineName, configFile, argv })
+let pipeline
+try {
+  pipeline = iterDuct({ pipelineName, configFile, argv })
+} catch (e) {
+  console.log(e.message)
+  process.exit(1)
+}
+
+pipeline
   .then(id => id.run())
   .then(() => {
     console.log('Done!')
