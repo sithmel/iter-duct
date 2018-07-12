@@ -1,5 +1,17 @@
 #!/usr/bin/env node
 
+const help = `
+iter-duct: an utility to run pipelines
+
+Options:
+
+--config file.js
+Configuration file.It defaults to iter-duct.config.js in the package root
+
+--pipeline pipeline1,pipeline2
+(Optional) the pipelines to run.
+`
+
 const iterDuct = require('../src/cmd')
 const argv = require('minimist')(process.argv.slice(2))
 
@@ -10,7 +22,8 @@ let pipeline
 try {
   pipeline = iterDuct({ pipelineName, configFile, argv })
 } catch (e) {
-  console.log(e.message)
+  console.log(help)
+  console.log('Error:', e.message)
   process.exit(1)
 }
 

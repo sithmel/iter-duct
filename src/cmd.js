@@ -13,24 +13,38 @@ function getModuleDir () {
   }
 }
 
-function iterDuct ({ pipelineName, modulePath, configFile, argv }) {
+function iterDuct ({ pipelineNameCfg, modulePath, configFile, argv }) {
   modulePath = modulePath || getModuleDir()
   configFile = configFile || 'iter-duct.config.js'
-  const config = require(path.join(modulePath, configFile))
-
-  if (pipelineName && !config[pipelineName]) {
-    throw new Error(`Pipeline ${pipelineName} is not defined: You can use: ${Object.keys(config).join(', ')}`)
+  let config
+  const configPath = path.join(modulePath, configFile)
+  try {
+    config = require(configPath)
+  } catch (e) {
+    throw new Error(`The configuration is not valid ${configPath}`)
+  }
+  let pipelines = []
+  if (pipelineNameCfg) {
+    const pipelineNames = pipelineNameCfg.split(/[,\s]+/)
+    for (const pipelineName of pipelineNames) {
+      if (!config[pipelineName]) {
+        throw new Error(`Pipeline ${pipelineName} is not defined: You can use: ${Object.keys(config).join(', ')}`)
+      }
+      pipelines.push(config[pipelineName])
+    }
+  } else {
+    pipelines.push(config)
   }
 
-  let pipeline = pipelineName ? config[pipelineName] : config
+  let pipelineFuncs = []
 
-  if (!Array.isArray(pipeline) && typeof pipeline !== 'function') {
-    throw new Error(`Pipeline should be either an array or a function returning an array`)
+  for (const pipeline of pipelines) {
+    if (!Array.isArray(pipeline) && typeof pipeline !== 'function') {
+      throw new Error(`Pipeline should be either an array or a function returning an array`)
+    }
+    pipelineFuncs.push(typeof pipeline === 'function' ? pipeline : () => pipeline)
   }
-  const pipelineFunc = typeof pipeline === 'function' ? pipeline : () => pipeline
-
-  return Promise.resolve()
-    .then(() => pipelineFunc(argv))
+  return Promise.all(pipelineFuncs.map((pipelineFunc) => pipelineFunc(argv)))
     .then((p) => new IterDuct(p))
 }
 

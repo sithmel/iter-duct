@@ -6,16 +6,22 @@ const {
 } = require('./segments')
 
 class IterDuct {
-  constructor (pipeline) {
-    this.iter = getSegment(pipeline)
+  constructor (pipelines) {
+    this.pipelines = pipelines.map(getSegment)
   }
 
-  run () {
-    return it.asyncConsume(() => {}, this.iter())
+  async run () {
+    for (const pipeline of this.pipelines) {
+      await it.asyncConsume(() => {}, pipeline())
+    }
   }
 
-  toArray () {
-    return it.asyncIterToArray(this.iter())
+  async toArray () {
+    const out = []
+    for (const pipeline of this.pipelines) {
+      out.push(await it.asyncIterToArray(pipeline()))
+    }
+    return out
   }
 }
 

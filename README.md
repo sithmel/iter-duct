@@ -87,6 +87,10 @@ that you can run with:
 ```
 npx iter-duct -dbPassword secretpassword
 ```
+You can also run multiple pipelines sequentially using:
+```
+npx iter-duct --pipeline migration1,migration2
+```
 
 Pipeline segment
 ----------------
@@ -149,10 +153,12 @@ Javascript API
 iter-duct exposes a js api too!
 ```js
 const { IterDuct } = require('iter-duct')
-const id = new IterDuct(pipeline) // pipeline is aan array of segments as defined in the configuration
-id.run() // it runs a pipeline, returns a promise
-id.toArray() // it runs the pipeline and returns an array with all items (useful for debugging)
-id.iter // contains the composed iterator
+const id = new IterDuct(pipelines)
+// pipelines is an array of pipeline. Every pipeline is an array of segments as defined in the configuration
+id.run()
+// it runs a pipeline, returns a promise
+id.toArray()
+// it runs the pipeline and returns an array with all items (useful for debugging)
 ```
 Once an iterator is consumed by **run** or **toArray** it can't be used anymore.
 
