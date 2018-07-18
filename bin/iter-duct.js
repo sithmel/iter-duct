@@ -15,12 +15,12 @@ Configuration file.It defaults to iter-duct.config.js in the package root
 const iterDuct = require('../src/cmd')
 const argv = require('minimist')(process.argv.slice(2))
 
-const pipelineName = argv.pipeline
+const pipelineNameCfg = argv.pipeline
 const configFile = argv.config || 'iter-duct.config.js'
 
 let pipeline
 try {
-  pipeline = iterDuct({ pipelineName, configFile, argv })
+  pipeline = iterDuct({ pipelineNameCfg, configFile, argv })
 } catch (e) {
   console.log(help)
   console.log('Error:', e.message)
