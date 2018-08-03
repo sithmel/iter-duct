@@ -210,6 +210,11 @@ const { getLogger } = require('iter-duct')
 const logger = getLogger(loggerObj)
 ```
 logger interface is the same as [winston](https://www.npmjs.com/package/winston)
+The default logger takes these arguments:
+* level
+* message
+* error (optional) error object
+* item (optional) a string or an object, representing the current item
 
 tricks
 ======
