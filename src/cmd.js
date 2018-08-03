@@ -19,7 +19,7 @@ function iterDuct ({ pipelineNameCfg, modulePath, configFile, argv }) {
   let config
   const configPath = path.join(modulePath, configFile)
   // configure logger
-  setLogger(argv)
+  setLogger(argv || {})
   try {
     config = require(configPath)
   } catch (e) {
