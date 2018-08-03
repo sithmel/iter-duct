@@ -168,9 +168,48 @@ This library provides a special set of segments:
 * multiplex: it takes an array of an object, it duplicates the iterable in input and pass it through a different segment
 * getSegment: it takes a segment, an array of segment and it returns a single segment using the rules explained above
 * passthrough: it is a simple segment that return the iterable in input
+* cond: it uses different segments depending on a predicate
 ```js
-const { multiplex, getSegment, passthrough } = require('iter-duct')
+const { multiplex, getSegment, passthrough, cond } = require('iter-duct')
 ```
+
+Example with cond:
+```js
+const doubleIfLessThanTen = cond(
+  (item) => item > 10, // predicate
+  it.asyncMap(() => item * 2)) // if true
+  // if false it will passthrough the same sequence
+doubleIfLessThanTen([1, 7, 10, 20, 5]) // 2, 14, 10, 20, 10
+```
+another example using a second segment:
+```js
+const doubleOrTriple = cond(
+  (item) => item > 10, // predicate
+  it.asyncMap(() => item * 2), // if true
+  it.asyncMap(() => item * 3)) // if false
+
+doubleOrTriple([1, 7, 10, 20, 5]) // 2, 14, 30, 60, 10
+```
+You can also use the "Pipeline segment" syntax as explained above.
+
+logger
+======
+iter-duct js api exposes a convenient API for adding an unified logging support to all segments.
+The logger is initialised automatically. It takes 2 arguments from the command line: logLevel and logFile.
+You can set a custom logger from the config file using replaceLogger or set the parameters programmatically using setLogger:
+```js
+const { replaceLogger, setLogger } = require('iter-duct')
+replaceLogger(loggerObj)
+// or
+setLogger({ logLevel: 'debug', logFile: 'migration.log'})
+```
+The loggerObject should be the same api used by [winston](https://www.npmjs.com/package/winston)
+A segment can get the logger with:
+```js
+const { getLogger } = require('iter-duct')
+const logger = getLogger(loggerObj)
+```
+logger interface is the same as [winston](https://www.npmjs.com/package/winston)
 
 tricks
 ======

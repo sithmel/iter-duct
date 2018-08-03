@@ -1,6 +1,6 @@
 const path = require('path')
 const fs = require('fs')
-const { IterDuct } = require('./index')
+const { IterDuct, setLogger } = require('./index')
 
 function getModuleDir () {
   const pathFrags = process.cwd().split(path.sep)
@@ -18,6 +18,8 @@ function iterDuct ({ pipelineNameCfg, modulePath, configFile, argv }) {
   configFile = configFile || 'iter-duct.config.js'
   let config
   const configPath = path.join(modulePath, configFile)
+  // configure logger
+  setLogger(argv)
   try {
     config = require(configPath)
   } catch (e) {

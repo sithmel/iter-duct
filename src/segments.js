@@ -60,8 +60,37 @@ function multiplex (options) {
   }
 }
 
+/* cond */
+
+const invertPredicate = (func) => (arg) => !func(arg)
+
+function cond (predicate, ifTrue, ifFalse) {
+  ifFalse = ifFalse || passthrough()
+  const ifTrueSegment = getSegment(ifTrue)
+  const ifFalseSegment = getSegment(ifFalse)
+  const oppositePredicate = invertPredicate(predicate)
+  return async function * (iterable) {
+    const [originalIterable, copyIterable1, copyIterable2] = it.asyncTee(iterable, 3)
+    const ifTrueIterable = ifTrueSegment(it.asyncFilter(predicate, copyIterable1))
+    const ifFalseIterable = ifFalseSegment(it.asyncFilter(oppositePredicate, copyIterable2))
+    try {
+      for await (const item of originalIterable) {
+        if (predicate(item)) {
+          yield (await ifTrueIterable.next()).value
+        } else {
+          yield (await ifFalseIterable.next()).value
+        }
+      }
+    } finally {
+      if (typeof ifTrueIterable.return === 'function') ifTrueIterable.return()
+      if (typeof ifFalseIterable.return === 'function') ifFalseIterable.return()
+    }
+  }
+}
+
 module.exports = {
   multiplex,
   getSegment,
-  passthrough
+  passthrough,
+  cond
 }

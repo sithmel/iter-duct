@@ -2,11 +2,13 @@ const it = require('iter-tools/es2018')
 const {
   multiplex,
   getSegment,
-  passthrough
+  passthrough,
+  cond
 } = require('./segments')
+const { setLogger, getLogger, replaceLogger } = require('./logger')
 
 class IterDuct {
-  constructor (pipelines) {
+  constructor (pipelines, logger) {
     this.pipelines = pipelines.map(getSegment)
   }
 
@@ -29,5 +31,9 @@ module.exports = {
   IterDuct,
   multiplex,
   getSegment,
-  passthrough
+  passthrough,
+  cond,
+  setLogger,
+  getLogger,
+  replaceLogger
 }
